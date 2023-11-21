@@ -1,11 +1,10 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {CountryOption} from "@/components/CountrySelector/CountrySelectorTypes";
+import {NextResponse} from "next/server";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<CountryOption[]>
-) {
+export async function GET() {
+
   try {
     const response = await axios.get('https://restcountries.com/v2/all');
     const countries = response.data.map((country: any) => ({
@@ -13,8 +12,8 @@ export default async function handler(
       label: country.name,
       flag: country.flags.svg
     }));
-    res.status(200).json(countries);
+    return NextResponse.json(countries);
   } catch (error) {
-    res.status(500).json([]);
+    return NextResponse.json([]);
   }
 }
